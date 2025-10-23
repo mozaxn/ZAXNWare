@@ -18,9 +18,42 @@ These are small, efficient command-line tools for everyday tasks.
 
 ## Installation
 
-You can clone the repo using **SSH** or **HTTPS**.
+**You can install individual tools using `zware.sh` script.**
 
-### Using SSH (recommended)
+### Using ZAXNWare Installer
+
+You can downnload `zware.sh` using `curl`:
+
+```bash
+curl -L https://raw.githubusercontent.com/mozaxn/ZAXNWare/main/zware.sh -o zware.sh
+chmod +x zware.sh
+```
+
+To install `zware` system-wide (for the current user):
+
+```bash
+sudo mv ./zware.sh /usr/local/bin/zware
+```
+
+To download a tool, run:
+
+```bash
+sudo zware -i <tool>
+```
+
+For instance, to download `bakman`, run:
+
+```bash
+sudo zware -i bakman
+```
+
+To view the list of available tools in ZAXNWare, run:
+
+```bash
+zware -l
+```
+
+### Using SSH
 ```bash
 git clone git@github.com:mozaxn/ZAXNWare.git
 ```
