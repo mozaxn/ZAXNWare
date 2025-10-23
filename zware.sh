@@ -21,17 +21,32 @@ if [[ "$#" == 0 ]]; then
 	exit
 fi
 
+# GitHub repo base path
+BASE_URL="raw.githubusercontent.com/mozaxn/ZAXNWare/main"
+
 # Parse options
-while getopts "i:" opt; do
+while getopts "li:" opt; do
 
 	case $opt in
+		l) list=true ;;
 		i) tool="$OPTARG" ;;
 		\?) echo "Invalid option: -$OPTARG"; exit 1 ;;
 	esac
 done
 
+# Show the list of available tools if list=true
+if [[ "$list" == true ]]; then
+
+	TOOLS=$( curl -fsL "$BASE_URL/.tools" )
+
+	echo "Available tools in ZAXNWare:"
+	for util in $TOOLS; do
+		echo -e "\t- $util"
+	done
+	exit
+fi
+
 # Install the tool
-BASE_URL="raw.githubusercontent.com/mozaxn/ZAXNWare/main"
 TOOL_URL="$BASE_URL/$tool/$tool.sh"
 INSTALL_DIR="/usr/local/bin"
 
