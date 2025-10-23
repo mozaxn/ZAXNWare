@@ -12,7 +12,7 @@
 ######################
 
 # Version declaration
-VERSION="1.0.0"
+VERSION="1.1.0"
 VERSION_STAMP="ZAXNWare Installer (zware) version $VERSION"
 
 # If no option is passed, return the version
