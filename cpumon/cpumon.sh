@@ -48,7 +48,7 @@ fi
 
 # Check if the entered limit is within bounds.
 if [[ $limit -gt 100 || $limit -lt 0 ]]; then
-	echo "Error: The entered CPU usage limit is out of bounds!" >^2
+	echo "Error: The entered CPU usage limit is out of bounds!" >&2
 	exit 1
 fi
 
