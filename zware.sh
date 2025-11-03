@@ -5,14 +5,14 @@
 ######################
 # Author: ZAXN
 # Created on: 23/10/2025
-# Last updated on: 23/10/2025
+# Last updated on: 04/11/2025
 
 # ZAXNWare Installer (zware) is a lightweight package installer for ZAXNWare utilities.
 
 ######################
 
 # Version declaration
-VERSION="1.1.0"
+VERSION="1.2.0"
 VERSION_STAMP="ZAXNWare Installer (zware) version $VERSION"
 
 # If no option is passed, return the version
@@ -47,20 +47,25 @@ if [[ "$list" == true ]]; then
 fi
 
 # Install the tool
-TOOL_URL="$BASE_URL/$tool/$tool.sh"
+if [[ "$tool" == "valyria" ]]; then
+	TOOL_URL="$BASE_URL/$tool/$tool.py"
+else
+	TOOL_URL="$BASE_URL/$tool/$tool.sh"
+fi
+
 INSTALL_DIR="/usr/local/bin"
 
 echo "[+] Downloading ZAXNWare ($tool)..."
-curl -fL "$TOOL_URL" -o "$tool.sh" || {
+curl -fL "$TOOL_URL" -o "$tool" || {
 	echo "[!] Failed to fetch ZAXNWare ($tool)."
 	exit 1
 }
 
 # Give executable permissions to the tool
-chmod +x "$tool.sh"
+chmod +x "$tool"
 echo "[+] Installing $tool to $INSTALL_DIR..."
 
 # Move the tool to install directory
-sudo mv "$tool.sh" "$INSTALL_DIR/$tool"
+sudo mv "$tool" "$INSTALL_DIR/$tool"
 echo "[✓] ZAXNWare ($tool) installed successfully."
 exit
