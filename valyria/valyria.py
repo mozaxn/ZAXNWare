@@ -158,7 +158,7 @@ def main():
 
     # Return version if asked for
     if version:
-        print(f"Valyria - version {VERSION}")
+        print(f"ZAXNWare Valyria version {VERSION}")
         return
 
     # If encryption/decryption is not mentioned, return an error
