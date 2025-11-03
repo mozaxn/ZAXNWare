@@ -15,6 +15,8 @@ These are small, efficient command-line tools for everyday tasks.
 | **zwc**    | Counts words, lines or bytes in a file. |
 | **bakman** | Creates backup files for a directory, preserves structure, compresses into `.tar.gz` |
 | **cpumon** | Monitors CPU usage in the background and sends a system notification when usage exceeds a threshold |
+|**cicada**  | Given a list of packages, **Cicada** creates a shell script which when executed downloads all the packages at once. |
+|**valyria** | Valyria is used to encrypt and decrypt files. |
 
 ## Installation
 
