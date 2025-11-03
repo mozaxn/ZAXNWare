@@ -16,7 +16,7 @@ It alerts the user when the CPU usage exceeds a certain value.
 Clone the **ZAXNWare** repo using **SSH** or **HTTPS**:
 
 ```bash
-git clone git@github.com:ZAXN/ZAXNWare.git
+git clone git@github.com:mozaxn/ZAXNWare.git
 git clone https://github.com/mozaxn/ZAXNWare.git
 ```
 

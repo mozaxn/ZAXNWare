@@ -18,7 +18,7 @@ It preserves the directory structure, creates `.bak` copies of files, and compre
 Clone the **ZAXNWare** repo using **SSH** or **HTTPS**:
 
 ```bash
-git clone git@github.com:ZAXN/ZAXNWare.git
+git clone git@github.com:mozaxn/ZAXNWare.git
 git clone https://github.com/mozaxn/ZAXNWare.git
 ```
 
