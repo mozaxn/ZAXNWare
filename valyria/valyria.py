@@ -8,7 +8,17 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 # Important variables
-VERSION = "1.0.0"
+VERSION = "1.1.0"
+
+def atomic_write(file:str, data:bytes) -> None:
+
+    """Writes data to a temp file first and then replaces it with the original file to avoid corruption."""
+    with open(file + ".tmp", 'wb') as f:
+        f.write(data)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(file + ".tmp", file)
+
 
 def generate_private_key(outfile:str, password:str) -> bytes:
 
@@ -43,8 +53,7 @@ def generate_private_key(outfile:str, password:str) -> bytes:
     )
 
     # Write the private key to a file
-    with open(OUTFILE, 'wb') as f:
-        f.write(priv_key)
+    atomic_write(outfile + '.pem', priv_key)
 
     # Return the public key
     return pub_key
@@ -82,10 +91,7 @@ def encrypt(file:str, public_key:bytes) -> None:
     )
 
     # Save the encrypted outputs
-    with open(INPUT_FILE, "wb") as f:
-        f.write(iv)
-        f.write(ciphertext)
-        f.write(encrypted_key)
+    atomic_write(INPUT_FILE, iv + ciphertext + encrypted_key)
 
 def decrypt(file:str, private_key_file:str, password:str) -> None:
 
@@ -124,9 +130,7 @@ def decrypt(file:str, private_key_file:str, password:str) -> None:
     decryptor = cipher.decryptor()
     plaintext = decryptor.update(ciphertext) + decryptor.finalize()
 
-
-    with open(file, 'wb') as f:
-        f.write(plaintext)
+    atomic_write(file, plaintext)
 
 def main():
 
