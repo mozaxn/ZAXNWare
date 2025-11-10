@@ -2,6 +2,7 @@
 
 import argparse
 import os
+from pathlib import Path
 from getpass import getpass
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives import serialization, hashes
@@ -59,12 +60,16 @@ def generate_private_key(outfile:str, password:str) -> bytes:
     return pub_key
 
 
-def encrypt(file:str, public_key:bytes) -> None:
+def encrypt(file:str, public_key:bytes) -> bool:
 
-    """Encrypts a given file using the public key."""
+    """Encrypts a given file using the public key (does not encrypt .pem files)."""
 
     INPUT_FILE = file
+    path = Path(INPUT_FILE)
 
+    if path.suffix == '.pem':
+        return False
+    
     public_key = serialization.load_pem_public_key(public_key)
 
     # Generate a random AES Key and IV
@@ -92,11 +97,17 @@ def encrypt(file:str, public_key:bytes) -> None:
 
     # Save the encrypted outputs
     atomic_write(INPUT_FILE, iv + ciphertext + encrypted_key)
+    return True
 
 def decrypt(file:str, private_key_file:str, password:str) -> None:
 
-    """Decrypt a file using the private key and the password."""
+    """Decrypt a file using the private key and the password and skip .pem files"""
 
+    # Check if the file ends in .pem
+    path = Path(file)
+    if path.suffix == '.pem':
+        return False
+    
     # Load the private key
     with open(private_key_file, 'rb') as f:
         private_key = serialization.load_pem_private_key(f.read(), password.encode('utf-8'))
@@ -131,6 +142,7 @@ def decrypt(file:str, private_key_file:str, password:str) -> None:
     plaintext = decryptor.update(ciphertext) + decryptor.finalize()
 
     atomic_write(file, plaintext)
+    return True
 
 def main():
 
@@ -180,6 +192,8 @@ def main():
         print("Please specify a private key file.")
         return False
 
+    pem_status = True
+
     # ENCRYPTION
     if encryption:
 
@@ -193,10 +207,13 @@ def main():
         pubkey = generate_private_key("VALYRIA_KEY", password)
 
         if file:
-            encrypt(file, pubkey)
+            enc = encrypt(file, pubkey)
+            pem_status *= not enc
 
-            if verbose:
+            if verbose and enc:
                 print(f"Encrypted file --> {file}")
+            elif verbose and not enc:
+                print(f"Skipping PEM file --> {file}")
         
         elif directory:
 
@@ -207,10 +224,16 @@ def main():
                     all_files.append(os.path.join(root, file))
             
             for file in all_files:
-                encrypt(file, pubkey)
+                enc = encrypt(file, pubkey)
+                pem_status *= not enc
 
-                if verbose:
+                if verbose and enc:
                     print(f"Encrypted file --> {file}")
+                elif verbose and not enc:
+                    print(f"Skipping PEM file --> {file}")
+
+        if pem_status == True:
+            os.remove("VALYRIA_KEY.pem")
 
     # DECRYPTION
     elif decryption:
@@ -218,10 +241,12 @@ def main():
         password = getpass("Enter the password for the private key: ")
         
         if file:
-            decrypt(file, private_key, password)
+            dec = decrypt(file, private_key, password)
 
-            if verbose:
+            if verbose and dec:
                 print(f"Decrypted file --> {file}.")
+            elif verbose and not dec:
+                    print(f"Skipping PEM file --> {file}")
         
         elif directory:
 
@@ -232,10 +257,12 @@ def main():
                     all_files.append(os.path.join(root, file))
             
             for file in all_files:
-                decrypt(file, private_key, password)
+                dec = decrypt(file, private_key, password)
 
-                if verbose:
+                if verbose and dec:
                     print(f"Decrypted file --> {file}.")
+                elif verbose and not dec:
+                    print(f"Skipping PEM file --> {file}")
 
 if __name__ == "__main__":
     main()
