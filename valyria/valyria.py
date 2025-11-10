@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 # Important variables
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 def atomic_write(file:str, data:bytes) -> None:
 
